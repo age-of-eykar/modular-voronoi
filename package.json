@@ -1,0 +1,27 @@
+{
+  "name": "modular-voronoi",
+  "version": "1.0.0",
+  "description": "A lib to separate voronoi diagrams calculation and display, designed to be compatible wit web workers.",
+  "type": "module",
+  "module": "src/index.js",
+  "main": "src/index.js",
+  "dependencies": {
+    "delaunator": "5"
+  },
+  "devDependencies": {
+    "mocha": "8"
+  },
+  "scripts": {
+    "test": "mocha 'test/**/*-test.js' && eslint src test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/age-of-eykar/modular-voronoi.git"
+  },
+  "author": "Th0rgal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/age-of-eykar/modular-voronoi/issues"
+  },
+  "homepage": "https://github.com/age-of-eykar/modular-voronoi#readme"
+}
