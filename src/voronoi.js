@@ -24,7 +24,7 @@ function find_cell(data, points, clickCoordinates) {
     const x = Math.floor(clickCoordinates[0] * (sideLength - 1));
     const y = Math.floor(clickCoordinates[1] * (sideLength - 1));
 
-    const guessedIndex = points[x + y * sideLength];
+    const guessedIndex = x + y * sideLength;
     if (inside(points[guessedIndex], data.get(guessedIndex)))
         return guessedIndex;
 
@@ -32,7 +32,7 @@ function find_cell(data, points, clickCoordinates) {
         for (let j = y - 1; j <= y + 1; j++)
             if ((i != x || j != y)
                 && i >= 0 && j >= 0 && i < sideLength && j < sideLength) {
-                const index = points[i + j * sideLength];
+                const index = i + j * sideLength;
                 if (inside(points[index], data.get(index)))
                     return index;
             }

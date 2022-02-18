@@ -9,4 +9,7 @@ it("inside(point, vs) should check if a point is in a polygon", () => {
     assert.ok(!inside([1.5, 2], polygon));
     assert.ok(!inside([1.5, 2.2], polygon));
     assert.ok(!inside([3, 5], polygon));
+
+    const polygon2 = [[0.2, 0.2], [0.2, 0.3], [0.3, 0.2], [0.3, 0.3]];
+    assert.ok(inside([0.25, 0.25], polygon2));
 });
