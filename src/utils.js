@@ -17,3 +17,5 @@ function inside(point, vs) {
     
     return inside;
 };
+
+export { inside };

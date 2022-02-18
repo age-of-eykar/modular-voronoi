@@ -1,5 +1,5 @@
 import Delaunator from "delaunator";
-import inside from "./utils";
+import { inside } from "./utils.js";
 
 /**
  * Precalculate a voronoi cell for each point of the provided array.
