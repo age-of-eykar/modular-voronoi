@@ -20,3 +20,5 @@ function precalculate(points) {
 function find_cell(data, clickCoordinates) {
 
 }
+
+export { precalculate, find_cell };
