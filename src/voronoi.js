@@ -21,14 +21,13 @@ function precalculate(points) {
  */
 function find_cell(data, points, clickCoordinates) {
     const sideLength = Math.sqrt(points.length); // should be an integer
-    const x = Math.floor(clickCoordinates[0] * (sideLength - 1));
-    const y = Math.floor(clickCoordinates[1] * (sideLength - 1));
-
+    const x = Math.min(Math.floor(clickCoordinates[0] * sideLength), sideLength - 1);
+    const y = Math.min(Math.floor(clickCoordinates[1] * sideLength), sideLength - 1);
     const guessedIndex = x + y * sideLength;
-    if (inside(points[guessedIndex], data.get(guessedIndex)))
-        return guessedIndex;
 
-    else for (let i = x - 1; i <= x + 1; i++)
+    if (inside(points[guessedIndex], data.get(guessedIndex))) {
+        return guessedIndex;
+    } else for (let i = x - 1; i <= x + 1; i++)
         for (let j = y - 1; j <= y + 1; j++)
             if ((i != x || j != y)
                 && i >= 0 && j >= 0 && i < sideLength && j < sideLength) {
