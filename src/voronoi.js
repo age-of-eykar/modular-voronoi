@@ -1,16 +1,5 @@
 import Delaunator from "delaunator";
-import { inside } from "./utils.js";
-
-function circumcenter(a, b, c) {
-    const ad = a[0] * a[0] + a[1] * a[1];
-    const bd = b[0] * b[0] + b[1] * b[1];
-    const cd = c[0] * c[0] + c[1] * c[1];
-    const D = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1]));
-    return [
-        1 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
-        1 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0])),
-    ];
-}
+import { inside, circumcenter } from "./utils.js";
 
 /**
  * Computes the circumcenters of the given triangles
@@ -18,18 +7,23 @@ function circumcenter(a, b, c) {
  * @param {Delaunator} delaunay
  * @returns {(number, number)[]}
  */
-function getCircumcenters(neighbors, delaunay) {}
+function getCircumcenters(neighbors, delaunay, points) {
+    const result = [];
 
-function edgesOfTriangle(t) { return [3 * t, 3 * t + 1, 3 * t + 2]; }
+    for (let i = 0; i < neighbors.length; i++) {
+        let e = neighbors[i];
+        let a = points[delaunay.triangles[e]];
+        let b = points[delaunay.triangles[nextHalfedge(e)]];
+        let c = points[delaunay.triangles[prevHalfedge(e)]];
+        result.push(circumcenter(a, b, c))
+    }
 
-function pointsOfTriangle(delaunay, t) {
-    return edgesOfTriangle(t).map(e => delaunay.triangles[e]);
+    return result;
 }
 
-function triangleCenter(points, delaunay, t) {
-    const vertices = pointsOfTriangle(delaunay, t).map(p => points[p]);
-    return circumcenter(vertices[0], vertices[1], vertices[2]);
-}
+function prevHalfedge(e) { return (e % 3 === 0) ? e + 2 : e - 1; }
+
+function nextHalfedge(e) { return (e % 3 === 2) ? e - 2 : e + 1; }
 
 /**
  * Computes the neighbors points of the given point
@@ -37,7 +31,36 @@ function triangleCenter(points, delaunay, t) {
  * @param {Delaunator} delaunay 
  * @returns {(number, number)[]}
  */
-function getNeighbors(delaunay, point) {}
+function getNeighbors(delaunay, start) {
+    const result = [];
+    let incoming = start;
+
+    do {
+        result.push(incoming);
+        const outgoing = nextHalfedge(incoming);
+        incoming = delaunay.halfedges[outgoing];
+    } while (incoming !== -1 && incoming !== start);
+
+    return result;
+}
+
+/**
+ * Creates a map from a point to its (leftmost) incomming halfedge
+ * @param {(number, number)} points
+ * @param {Delaunator} delaunay
+ * @returns {Map<(number, number), number>}
+ */
+function createPointToHalfedgeMap(delaunay) {
+    const index = new Map();
+
+    for (let i = 0; i < delaunay.triangles.length; i++) {
+        const endpoint = delaunay.triangles[nextHalfedge(i)];
+        if (!index.has(endpoint) || delaunay.halfedges[i] === -1) {
+            index.set(endpoint, i);
+    }
+
+    return index;
+}
 
 /**
  * Precalculates a voronoi cell for each point of the provided array.
@@ -46,12 +69,13 @@ function getNeighbors(delaunay, point) {}
  * @returns {Map<(number, number), (number, number)[]>}
  */
 function precalculate(points) {
-    let delaunay = Delaunator.from(points);
-    let data = new Map();
+    const delaunay = Delaunator.from(points);
+    const mappedHalfedges = createPointToHalfedgeMap(points, delaunay);
+    const data = new Map();
 
     for (let i = 0; i < points.length; i++) {
         let point = points[i];
-        let neighbors = getNeighbors(delaunay, point);
+        let neighbors = getNeighbors(delaunay, mappedHalfedges.get(point));
         let circumcenters = getCircumcenters(neighbors, delaunay);
         data.set(point, circumcenters)
     }
