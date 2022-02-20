@@ -34,7 +34,6 @@ function nextHalfedge(e) { return (e % 3 === 2) ? e - 2 : e + 1; }
 function getNeighbors(delaunay, start) {
     const result = [];
     let incoming = start;
-
     do {
         result.push(incoming);
         const outgoing = nextHalfedge(incoming);
@@ -45,7 +44,7 @@ function getNeighbors(delaunay, start) {
 }
 
 /**
- * Creates a map from a point to its (leftmost) incomming halfedge
+ * Creates a map from a point to its leftmost incoming halfedge
  * @param {(number, number)} points
  * @param {Delaunator} delaunay
  * @returns {Map<(number, number), number>}
@@ -54,11 +53,9 @@ function createPointToHalfedgeMap(delaunay) {
     const index = new Map();
     for (let i = 0; i < delaunay.triangles.length; i++) {
         const endpoint = delaunay.triangles[nextHalfedge(i)];
-        if (!index.has(endpoint) || delaunay.halfedges[i] === -1) {
+        if (!index.has(endpoint) || delaunay.halfedges[i] === -1)
             index.set(endpoint, i);
-        }
     }
-
     return index;
 }
 
@@ -72,14 +69,11 @@ function precalculate(points) {
     const delaunay = Delaunator.from(points);
     const mappedHalfedges = createPointToHalfedgeMap(delaunay);
     const data = new Map();
-
     for (let i = 0; i < points.length; i++) {
-        let point = points[i];
-        let neighbors = getNeighbors(delaunay, mappedHalfedges.get(point));
+        let neighbors = getNeighbors(delaunay, mappedHalfedges.get(i));
         let circumcenters = getCircumcenters(neighbors, delaunay, points);
-        data.set(point, circumcenters)
+        data.set(i, circumcenters)
     }
-
     return data;
 }
 
