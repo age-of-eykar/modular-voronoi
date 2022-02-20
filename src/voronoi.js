@@ -52,11 +52,11 @@ function getNeighbors(delaunay, start) {
  */
 function createPointToHalfedgeMap(delaunay) {
     const index = new Map();
-
     for (let i = 0; i < delaunay.triangles.length; i++) {
         const endpoint = delaunay.triangles[nextHalfedge(i)];
         if (!index.has(endpoint) || delaunay.halfedges[i] === -1) {
             index.set(endpoint, i);
+        }
     }
 
     return index;
@@ -70,13 +70,13 @@ function createPointToHalfedgeMap(delaunay) {
  */
 function precalculate(points) {
     const delaunay = Delaunator.from(points);
-    const mappedHalfedges = createPointToHalfedgeMap(points, delaunay);
+    const mappedHalfedges = createPointToHalfedgeMap(delaunay);
     const data = new Map();
 
     for (let i = 0; i < points.length; i++) {
         let point = points[i];
         let neighbors = getNeighbors(delaunay, mappedHalfedges.get(point));
-        let circumcenters = getCircumcenters(neighbors, delaunay);
+        let circumcenters = getCircumcenters(neighbors, delaunay, points);
         data.set(point, circumcenters)
     }
 
