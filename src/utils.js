@@ -29,4 +29,15 @@ function circumcenter(a, b, c) {
     ];
 }
 
-export { inside, circumcenter };
+function createCircumcenterTab(data) {
+    let res = [];    
+    for (let i = 0; i < data.size; i++) {
+        for (let j = 0; j < data.get(i).length; j++) {
+            res.push(data.get(i)[j][0]);
+            res.push(data.get(i)[j][1]);
+        }
+    }
+    return res;
+}
+
+export { inside, circumcenter, createCircumcenterTab };
