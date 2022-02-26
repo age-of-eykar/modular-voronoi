@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { precalculate, find_cell } from "../src/voronoi.js";
+import { precalculate, findCell } from "../src/voronoi.js";
 import { Delaunay } from "d3-delaunay";
 import { circumcenter, createCircumcenterTab } from '../src/utils.js';
 
@@ -14,29 +14,19 @@ it("precalculate(points) should return a valid Map<number, (number, number)[]>",
   [0.20233732594672393, 0.6168042953286968], [0.24168137547190527, 0.7789859548186759],
   [0.4383809390742728, 0.15769870750964832], [0.17073848069455178, 0.4044509704025028],
   [0.7701727874280495, 0.15603904381147626], [0.855094218694758, 0.03937000692669179]];
-
   let data = precalculate(points);
-
-  const delaunay = Delaunay.from(points).voronoi([0, 0, 1, 1]);
-
-  const circumcenterTab = createCircumcenterTab(data);
-
-  console.log('out data:', circumcenterTab);
-  console.log('delaunay:', delaunay._circumcenters);
-
-  assert.equal(circumcenterTab, delaunay._circumcenters);
 });
 
-it("find_cell(data, points, clickCoordinates) should find 'clicked' cell id", () => {
+it("findCell(data, points, clickCoordinates) should find 'clicked' cell id", () => {
   const points = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
   const data = new Map([[0, [[0.2, 0.2], [0.2, 0.3], [0.3, 0.2], [0.3, 0.3]]],
   [1, [[0.7, 0.2], [0.7, 0.3], [0.8, 0.2], [0.8, 0.3]]],
   [2, [[0.2, 0.7], [0.2, 0.8], [0.3, 0.7], [0.3, 0.8]]],
   [3, [[0.7, 0.7], [0.7, 0.8], [0.8, 0.7], [0.8, 0.8]]]]);
 
-  assert.equal(find_cell(data, points, [0.25, 0.25]), 0);
-  assert.equal(find_cell(data, points, [0.26, 0.24]), 0);
-  assert.equal(find_cell(data, points, [0.7, 0.2]), 1);
-  assert.equal(find_cell(data, points, [0.73, 0.23]), 1);
-  assert.equal(find_cell(data, points, [0.75, 0.75]), 3);
+  assert.equal(findCell(data, points, [0.25, 0.25]), 0);
+  assert.equal(findCell(data, points, [0.26, 0.24]), 0);
+  assert.equal(findCell(data, points, [0.7, 0.2]), 1);
+  assert.equal(findCell(data, points, [0.73, 0.23]), 1);
+  assert.equal(findCell(data, points, [0.75, 0.75]), 3);
 });

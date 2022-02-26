@@ -85,7 +85,7 @@ function precalculate(points) {
  * @param {(number, number)} start coordinates of the click (in [0, 1]ˆ2)
  * @returns {number} the id of the polygon containing the point
  */
-function find_cell(data, points, clickCoordinates) {
+function findCell(data, points, clickCoordinates) {
     const sideLength = Math.sqrt(points.length); // should be an integer
     const x = Math.min(Math.floor(clickCoordinates[0] * sideLength), sideLength - 1);
     const y = Math.min(Math.floor(clickCoordinates[1] * sideLength), sideLength - 1);
@@ -105,4 +105,4 @@ function find_cell(data, points, clickCoordinates) {
     return -1;
 }
 
-export { precalculate, find_cell };
+export { precalculate, findCell };
