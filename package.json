@@ -1,6 +1,6 @@
 {
   "name": "modular-voronoi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A lib to separate voronoi diagrams calculation and display, designed to be compatible wit web workers.",
   "type": "module",
   "module": "src/index.js",

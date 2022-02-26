@@ -65,14 +65,17 @@ function createPointToHalfedgeMap(delaunay) {
  * @param {(number, number)[]} points
  * @returns {Map<(number, number), (number, number)[]>}
  */
-function precalculate(points) {
+function precalculate(points, gridWidth, gridHeight) {
     const delaunay = Delaunator.from(points);
     const mappedHalfedges = createPointToHalfedgeMap(delaunay);
     const data = new Map();
-    for (let i = 0; i < points.length; i++) {
-        let neighbors = getNeighbors(delaunay, mappedHalfedges.get(i));
-        let circumcenters = getCircumcenters(neighbors, delaunay, points);
-        data.set(i, circumcenters)
+    for (let i = 1; i < gridWidth - 1; i++) {
+        for (let j = 1; j < gridHeight - 1; j++) {
+            const index = i * gridWidth + j;
+            let neighbors = getNeighbors(delaunay, mappedHalfedges.get(index));
+            let circumcenters = getCircumcenters(neighbors, delaunay, points);
+            data.set(index, circumcenters)
+        }
     }
     return data;
 }
