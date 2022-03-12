@@ -9,7 +9,6 @@ import { inside, circumcenter } from "./utils.js";
  */
 function getCircumcenters(neighbors, delaunay, points) {
     const result = [];
-
     for (let i = 0; i < neighbors.length; i++) {
         let e = neighbors[i];
         let a = points[delaunay.triangles[e]];
@@ -17,8 +16,28 @@ function getCircumcenters(neighbors, delaunay, points) {
         let c = points[delaunay.triangles[prevHalfedge(e)]];
         result.push(circumcenter(a, b, c))
     }
-
     return result;
+}
+
+/**
+ * Returns the triangulized polygon
+ * @param {(number, number)[]} neighbors
+ * @param {Delaunator} delaunay
+ * @param {int[]} points
+ * @returns {(number, number)[]}
+ */
+function getTriangulation(neighbors, delaunay, points) {
+    const circumcenters = getCircumcenters(neighbors, delaunay, points);
+    const output = new Float32Array(6 * (circumcenters.length - 2));
+    for (let i = 0; i < circumcenters.length - 2; i++) {
+        output[6 * i] = circumcenters[0][0];
+        output[6 * i + 1] = circumcenters[0][1];
+        output[6 * i + 2] = circumcenters[i + 1][0];
+        output[6 * i + 3] = circumcenters[i + 1][1];
+        output[6 * i + 4] = circumcenters[i + 2][0];
+        output[6 * i + 5] = circumcenters[i + 2][1];
+    }
+    return output;
 }
 
 function prevHalfedge(e) { return (e % 3 === 0) ? e + 2 : e - 1; }
@@ -60,10 +79,10 @@ function createPointToHalfedgeMap(delaunay) {
 }
 
 /**
- * Precalculates a voronoi cell for each point of the provided array.
+ * Precalculates a triangulized voronoi cell for each point of the provided array.
  * @warning points coordinates should be given between 0 and 1.
  * @param {(number, number)[]} points
- * @returns {(number, number)[][]} output
+ * @returns {Float32Array[]} output
  */
 function precalculate(points, gridWidth, gridHeight) {
     const delaunay = Delaunator.from(points);
@@ -73,21 +92,21 @@ function precalculate(points, gridWidth, gridHeight) {
         for (let j = 1; j < gridHeight - 1; j++) {
             const index = i * gridWidth + j;
             let neighbors = getNeighbors(delaunay, mappedHalfedges.get(index));
-            let circumcenters = getCircumcenters(neighbors, delaunay, points);
-            data.push(circumcenters)
+            data.push(getTriangulation(neighbors, delaunay, points));
         }
     }
     return data;
 }
 
-/**
+/* todo: adapt to triangles
+
  * Find the id of the cell containing the given point
  * @warning points coordinates must be given between 0 and 1.
  * @param {Map<number, (number, number)[]>} data precalculated
  * @param {(number, number)[]} points are expected to be a square grid
  * @param {(number, number)} start coordinates of the click (in [0, 1]ˆ2)
  * @returns {number} the id of the polygon containing the point
- */
+ 
 function findCell(data, points, clickCoordinates) {
     const sideLength = Math.sqrt(points.length); // should be an integer
     const x = Math.min(Math.floor(clickCoordinates[0] * sideLength), sideLength - 1);
@@ -107,5 +126,6 @@ function findCell(data, points, clickCoordinates) {
 
     return -1;
 }
+*/
 
-export { precalculate, findCell };
+export { precalculate };

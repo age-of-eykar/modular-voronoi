@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { precalculate, findCell } from "../src/voronoi.js";
+import { precalculate } from "../src/voronoi.js";
 import { Delaunay } from "d3-delaunay";
 import { circumcenter, createCircumcenterTab } from '../src/utils.js';
 
@@ -15,6 +15,7 @@ it("precalculate(points) should return a valid Map<number, (number, number)[]>",
   let data = precalculate(points, 4, 4); // 4x4 grid
 });
 
+/*
 it("findCell(data, points, clickCoordinates) should find 'clicked' cell id", () => {
   const points = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
   const data = new Map([[0, [[0.2, 0.2], [0.2, 0.3], [0.3, 0.2], [0.3, 0.3]]],
@@ -28,3 +29,4 @@ it("findCell(data, points, clickCoordinates) should find 'clicked' cell id", () 
   assert.equal(findCell(data, points, [0.73, 0.23]), 1);
   assert.equal(findCell(data, points, [0.75, 0.75]), 3);
 });
+*/

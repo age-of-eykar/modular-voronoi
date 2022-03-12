@@ -1,1 +1,1 @@
-export { precalculate, findCell } from "./voronoi.js";
+export { precalculate } from "./voronoi.js";
