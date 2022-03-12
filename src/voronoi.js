@@ -21,14 +21,11 @@ function getCircumcenters(neighbors, delaunay, points) {
 
 /**
  * Returns the triangulized polygon
- * @param {(number, number)[]} neighbors
- * @param {Delaunator} delaunay
- * @param {int[]} points
+ * @param {(number, number)[]} circumcenters
  * @returns {(number, number)[]}
  */
-function getTriangulation(neighbors, delaunay, points) {
-    const circumcenters = getCircumcenters(neighbors, delaunay, points);
-    const output = new Float32Array(6 * (circumcenters.length - 2));
+function getTriangulation(circumcenters) {
+    const output = new Array(6 * (circumcenters.length - 2));
     for (let i = 0; i < circumcenters.length - 2; i++) {
         output[6 * i] = circumcenters[0][0];
         output[6 * i + 1] = circumcenters[0][1];
@@ -87,15 +84,21 @@ function createPointToHalfedgeMap(delaunay) {
 function precalculate(points, gridWidth, gridHeight) {
     const delaunay = Delaunator.from(points);
     const mappedHalfedges = createPointToHalfedgeMap(delaunay);
-    const data = [];
+    const output = [];
+    const stops = [];
+    let lastStop = 0;
     for (let i = 1; i < gridWidth - 1; i++) {
         for (let j = 1; j < gridHeight - 1; j++) {
             const index = i * gridWidth + j;
             let neighbors = getNeighbors(delaunay, mappedHalfedges.get(index));
-            data.push(getTriangulation(neighbors, delaunay, points));
+
+            const triangulized = getTriangulation(getCircumcenters(neighbors, delaunay, points));
+            output.push(...triangulized);
+            lastStop += triangulized.length;
+            stops.push(lastStop);
         }
     }
-    return data;
+    return { points: new Float32Array(output), stops: stops };
 }
 
 /* todo: adapt to triangles
