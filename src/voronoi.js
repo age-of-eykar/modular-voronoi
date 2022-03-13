@@ -94,7 +94,7 @@ function precalculate(points, gridWidth, gridHeight) {
 
             const triangulized = getTriangulation(getCircumcenters(neighbors, delaunay, points));
             output.push(...triangulized);
-            lastStop += triangulized.length;
+            lastStop += triangulized.length/2;
             stops.push(lastStop);
         }
     }
