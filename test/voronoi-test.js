@@ -1,7 +1,4 @@
-import { assert } from 'chai';
 import { precalculate } from "../src/voronoi.js";
-import { Delaunay } from "d3-delaunay";
-import { circumcenter, createCircumcenterTab } from '../src/utils.js';
 
 it("precalculate(points) should return a valid Map<number, (number, number)[]>", () => {
   const points = [[0.950099732338725, 0.2725575431902938], [0.36450625746189247, 0.8302913568299969],
@@ -14,19 +11,3 @@ it("precalculate(points) should return a valid Map<number, (number, number)[]>",
   [0.20233732594672393, 0.6168042953286968], [0.24168137547190527, 0.7789859548186759]];
   let data = precalculate(points, 4, 4); // 4x4 grid
 });
-
-/*
-it("findCell(data, points, clickCoordinates) should find 'clicked' cell id", () => {
-  const points = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
-  const data = new Map([[0, [[0.2, 0.2], [0.2, 0.3], [0.3, 0.2], [0.3, 0.3]]],
-  [1, [[0.7, 0.2], [0.7, 0.3], [0.8, 0.2], [0.8, 0.3]]],
-  [2, [[0.2, 0.7], [0.2, 0.8], [0.3, 0.7], [0.3, 0.8]]],
-  [3, [[0.7, 0.7], [0.7, 0.8], [0.8, 0.7], [0.8, 0.8]]]]);
-
-  assert.equal(findCell(data, points, [0.25, 0.25]), 0);
-  assert.equal(findCell(data, points, [0.26, 0.24]), 0);
-  assert.equal(findCell(data, points, [0.7, 0.2]), 1);
-  assert.equal(findCell(data, points, [0.73, 0.23]), 1);
-  assert.equal(findCell(data, points, [0.75, 0.75]), 3);
-});
-*/

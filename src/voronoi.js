@@ -1,5 +1,5 @@
 import Delaunator from "delaunator";
-import { inside, circumcenter } from "./utils.js";
+import { circumcenter } from "./utils.js";
 
 /**
  * Computes the circumcenters of the given triangles
@@ -100,35 +100,5 @@ function precalculate(points, gridWidth, gridHeight) {
     }
     return { points: new Float32Array(output), stops: stops };
 }
-
-/* todo: adapt to triangles
-
- * Find the id of the cell containing the given point
- * @warning points coordinates must be given between 0 and 1.
- * @param {Map<number, (number, number)[]>} data precalculated
- * @param {(number, number)[]} points are expected to be a square grid
- * @param {(number, number)} start coordinates of the click (in [0, 1]ˆ2)
- * @returns {number} the id of the polygon containing the point
- 
-function findCell(data, points, clickCoordinates) {
-    const sideLength = Math.sqrt(points.length); // should be an integer
-    const x = Math.min(Math.floor(clickCoordinates[0] * sideLength), sideLength - 1);
-    const y = Math.min(Math.floor(clickCoordinates[1] * sideLength), sideLength - 1);
-    const guessedIndex = x + y * sideLength;
-
-    if (inside(points[guessedIndex], data.get(guessedIndex))) {
-        return guessedIndex;
-    } else for (let i = x - 1; i <= x + 1; i++)
-        for (let j = y - 1; j <= y + 1; j++)
-            if ((i != x || j != y)
-                && i >= 0 && j >= 0 && i < sideLength && j < sideLength) {
-                const index = i + j * sideLength;
-                if (inside(points[index], data.get(index)))
-                    return index;
-            }
-
-    return -1;
-}
-*/
 
 export { precalculate };
